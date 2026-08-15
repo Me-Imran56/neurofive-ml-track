@@ -69,3 +69,29 @@ the predicted-vs-actual scatter plot).
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 jupyter notebook housing_regression.ipynb
 ```
+
+## Task 5: Model Evaluation Deep-Dive + Hyperparameter Tuning
+File: `titanic_eda.ipynb` (continues after Task 3).
+
+**Approach:**
+- Calculated Precision, Recall, and F1-score with `classification_report` on the Task 3
+  Logistic Regression model.
+- Explained why accuracy alone is misleading on imbalanced data (Titanic is ~62%/38% split) —
+  a model that always predicts the majority class can still look accurate while learning
+  nothing useful; Precision/Recall/F1 expose that in a way accuracy hides.
+- Tuned 2 hyperparameters — `C` (regularization strength) and `solver` — with `GridSearchCV`
+  (5-fold cross-validation, scored on F1).
+
+**Before vs. After tuning (test set):**
+| Metric | Before Tuning | After Tuning | Change |
+|---|---|---|---|
+| Accuracy | 0.8045 | 0.8045 | 0.0 |
+| Precision (Survived) | 0.7742 | 0.7742 | 0.0 |
+| Recall (Survived) | 0.6957 | 0.6957 | 0.0 |
+| F1-score (Survived) | 0.7328 | 0.7328 | 0.0 |
+
+**Result: no change.** `GridSearchCV` found `C=1, solver=lbfgs` was best — which is exactly
+scikit-learn's default. On a simple linear model with a small, clean dataset, the defaults
+were already near-optimal for this feature set; tuning tends to matter more on models with
+more capacity to overfit/underfit (tree-based models, SVMs, gradient boosting). The exercise's
+value here was confirming this systematically via cross-validation rather than guessing.
