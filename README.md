@@ -95,3 +95,42 @@ scikit-learn's default. On a simple linear model with a small, clean dataset, th
 were already near-optimal for this feature set; tuning tends to matter more on models with
 more capacity to overfit/underfit (tree-based models, SVMs, gradient boosting). The exercise's
 value here was confirming this systematically via cross-validation rather than guessing.
+
+## Task 6: Customer Churn Prediction — Telco Dataset
+File: `churn_prediction.ipynb` (new dataset/topic).
+
+**Approach:**
+- Dataset: IBM Telco Customer Churn (7,043 customers, 21 columns) — the original public
+  source of the Kaggle "Telco Customer Churn" dataset.
+- Quick EDA: month-to-month contracts churn at 42.7% vs. 11.3% (one year) and 2.8% (two year);
+  churners also skew toward lower tenure and higher monthly charges.
+- Cleaned `TotalCharges` (11 blank entries from tenure=0 customers, converted and filled as 0).
+- One-hot encoded all categorical columns.
+- **Class imbalance noted:** ~73% no-churn vs. ~27% churn. Not resampled/rebalanced in this
+  task, but called out explicitly, and evaluation uses Precision/Recall/F1 (not just
+  accuracy) on the Churn class specifically for that reason.
+- Trained and compared **Logistic Regression** vs. **Decision Tree** (`max_depth=5`).
+
+**Model comparison (test set):**
+| Model | Accuracy | Precision (Churn) | Recall (Churn) | F1 (Churn) |
+|---|---|---|---|---|
+| Logistic Regression | 0.8062 | 0.66 | 0.56 | 0.60 |
+| Decision Tree | 0.7942 | 0.63 | 0.54 | 0.58 |
+
+**Top 3 features driving churn (Decision Tree `.feature_importances_`):**
+1. `tenure` (0.42)
+2. `InternetService_Fiber optic` (0.36)
+3. `TotalCharges` (0.04)
+
+**Business summary:** newer customers (low tenure) are by far the highest churn risk, so the
+first few months of the relationship are the critical retention window. Fiber optic internet
+customers churn notably more than other segments — worth investigating pricing/reliability
+there directly. Logistic Regression slightly outperforms the Decision Tree numerically, but
+the Tree is easier to explain to non-technical stakeholders since its decision rules can be
+traced directly.
+
+### To run Task 6 locally
+```
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+jupyter notebook churn_prediction.ipynb
+```
