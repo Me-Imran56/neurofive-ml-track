@@ -134,3 +134,43 @@ traced directly.
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 jupyter notebook churn_prediction.ipynb
 ```
+
+## Task 7: Production-Style Pipeline + Feature Engineering
+File: `titanic_eda.ipynb` (continues after Task 5) + `titanic_pipeline.joblib` (saved model).
+
+**Approach:**
+- Engineered 2 new features: `FamilySize` (SibSp + Parch + 1) and `IsAlone` (1 if travelling
+  solo). Both show a real survival pattern — solo travellers and very large families (5+)
+  survived less often.
+- Built a single `Pipeline` with a `ColumnTransformer`: `StandardScaler` on numerical columns
+  (`Age`, `Fare`, `SibSp`, `Parch`, `FamilySize`, `IsAlone`, `Has_Cabin`) and `OneHotEncoder`
+  on categorical columns (`Sex`, `Embarked`, `Pclass`), feeding into `LogisticRegression`.
+- Fit and evaluated the pipeline against the Task 3 manual approach.
+- Saved the final fitted pipeline with `joblib.dump()` and verified the reloaded model
+  predicts identically.
+
+**Pipeline vs. manual comparison:**
+| Approach | Accuracy | F1-score |
+|---|---|---|
+| Manual (Task 3) | 0.8045 | 0.7328 |
+| Pipeline + Feature Engineering | 0.8045 | 0.7328 |
+
+**Result: identical performance.** The pipeline correctly reproduces the manual preprocessing
+(same accuracy/F1), confirming no information was lost in the `ColumnTransformer` setup. The
+engineered features didn't improve this particular Logistic Regression result — likely
+because `FamilySize` is a linear combination of `SibSp`/`Parch`, which the model already had
+access to — but they didn't hurt performance either, and could help more with a model that
+captures feature interactions differently (e.g. a Decision Tree).
+
+**Why a pipeline matters:** it bundles preprocessing and modeling into one object, so
+`pipeline.fit()` only fits the scaler/encoder on training data (no leakage) and
+`pipeline.predict()` on new raw data automatically applies the exact same transformations —
+no manual repetition, and the whole thing is a single object you can save and deploy.
+
+### To run Task 7 locally
+```
+pip install pandas numpy matplotlib seaborn scikit-learn joblib jupyter
+jupyter notebook titanic_eda.ipynb
+# Reload the saved pipeline elsewhere with:
+# import joblib; pipeline = joblib.load('titanic_pipeline.joblib')
+```
