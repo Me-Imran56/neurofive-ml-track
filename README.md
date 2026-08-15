@@ -43,3 +43,29 @@ included for convenience — swap in your own Kaggle download if preferred (same
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 jupyter notebook titanic_eda.ipynb
 ```
+
+## Task 4: Regression — California Housing Prices
+File: `housing_regression.ipynb` (separate notebook — new dataset/topic from Tasks 1-3).
+
+**Approach:**
+- Dataset: California Housing (20,640 districts, 1990 census) — `housing.csv`, the standard
+  public mirror of the sklearn/Kaggle-equivalent housing regression dataset (used in place of
+  the deprecated Boston Housing dataset).
+- Filled 207 missing `total_bedrooms` values with the median.
+- Selected 5 features believed to most affect price: `median_income`, `total_rooms`,
+  `housing_median_age`, `latitude`, `longitude`.
+- Trained a `LinearRegression` model (`sklearn.linear_model`), 80/20 train-test split.
+- Evaluated with RMSE and R².
+
+**Result: RMSE = $73,793 | R² = 0.58**
+
+R² of 0.58 means the model explains about 58% of the variation in house prices across
+districts using just these 5 features — a reasonable ballpark estimate, but not precise
+enough to replace a real appraisal (see notebook for the full plain-English explanation and
+the predicted-vs-actual scatter plot).
+
+### To run Task 4 locally
+```
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+jupyter notebook housing_regression.ipynb
+```
