@@ -174,3 +174,48 @@ jupyter notebook titanic_eda.ipynb
 # Reload the saved pipeline elsewhere with:
 # import joblib; pipeline = joblib.load('titanic_pipeline.joblib')
 ```
+
+## Task 8: Ensemble Methods — Random Forest & XGBoost
+File: `titanic_eda.ipynb` (continues after Task 7).
+
+**Approach:**
+- Trained `RandomForestClassifier` (n_estimators=200, max_depth=6) and `XGBClassifier`
+  (n_estimators=200, max_depth=4, learning_rate=0.1) on the same engineered feature set from
+  Task 7 (`FamilySize`, `IsAlone`, `Has_Cabin`, etc.), one-hot encoded.
+- Compared both against the Task 3 Logistic Regression baseline.
+- Plotted and compared feature importances for both ensembles.
+
+**Model comparison:**
+| Model | Accuracy | F1-score |
+|---|---|---|
+| Logistic Regression (Task 3) | 0.8045 | 0.7328 |
+| Random Forest | 0.7933 | 0.6992 |
+| XGBoost | 0.7821 | 0.6977 |
+
+**Result: Logistic Regression actually outperformed both ensembles on this dataset.** This is
+reported honestly rather than forced — Titanic is small (~891 rows) with a fairly linear
+relationship between key features (Sex, Pclass) and survival, and both ensembles used modest,
+untuned hyperparameters. Ensembles typically show their real advantage on larger, more
+non-linear datasets (e.g. the Telco churn data from Task 6).
+
+**Top 3 features:**
+- Random Forest: `Sex_male`, `Fare`, `Age`
+- XGBoost: `Sex_male`, `Pclass_3`, `Has_Cabin`
+
+Both agree `Sex_male` is by far the most important feature, consistent with earlier EDA
+findings; they diverge on the next-ranked features (Fare/Age vs. Pclass/Has_Cabin), both
+plausible proxies for socioeconomic status.
+
+**Random Forest vs. XGBoost — how they differ:** Random Forest builds many decision trees
+independently in parallel (bagging) on random subsets of rows/features and averages their
+votes, which reduces variance and overfitting. XGBoost builds trees sequentially (boosting),
+where each new tree specifically corrects the errors of the trees before it, refining the
+model step by step with built-in regularization. Boosting methods like XGBoost often edge out
+bagging methods like Random Forest on structured/tabular data, though not universally, as
+seen here.
+
+### To run Task 8 locally
+```
+pip install pandas numpy matplotlib seaborn scikit-learn xgboost joblib jupyter
+jupyter notebook titanic_eda.ipynb
+```
