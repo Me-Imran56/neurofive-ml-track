@@ -219,3 +219,36 @@ seen here.
 pip install pandas numpy matplotlib seaborn scikit-learn xgboost joblib jupyter
 jupyter notebook titanic_eda.ipynb
 ```
+
+## Task 9: Handling Class Imbalance — SMOTE
+File: `churn_prediction.ipynb` (continues after the Task 6 churn model).
+
+**Approach:**
+- Reused the Telco churn dataset (fraud dataset was too large/Kaggle-only, as the task
+  description allowed).
+- Visualized class balance: **5,174 No Churn vs. 1,869 Churn (~73%/27%)**.
+- Explained in writing why accuracy alone is misleading here — a model that always predicts
+  "No Churn" would score ~73% accuracy while catching zero actual churners.
+- Applied **SMOTE** (`imbalanced-learn`) to the training set only (never the test set, to
+  avoid data leakage), balancing it from 4,139/1,495 to an even 4,139/4,139.
+- Retrained Logistic Regression on the SMOTE-balanced data and compared before/after.
+
+**Before vs. after SMOTE (test set):**
+| Metric | Before SMOTE | After SMOTE | Change |
+|---|---|---|---|
+| Accuracy | 0.8062 | 0.7601 | −0.0461 |
+| Precision (Churn) | 0.6593 | 0.5411 | −0.1182 |
+| Recall (Churn) | 0.5588 | 0.6337 | **+0.0749** |
+| F1-score (Churn) | 0.6049 | 0.5837 | −0.0212 |
+
+**Result: a genuine precision/recall trade-off.** SMOTE improved Recall (catches more real
+churners: 63% vs. 56%) but reduced Precision, Accuracy, and F1 — more false alarms in
+exchange for missing fewer real churners. This is reported honestly as a trade-off, not a
+clean win: which model is "better" depends on the real business cost of a missed churner vs.
+a wasted retention offer, a decision accuracy alone would have completely hidden.
+
+### To run Task 9 locally
+```
+pip install pandas numpy matplotlib seaborn scikit-learn imbalanced-learn jupyter
+jupyter notebook churn_prediction.ipynb
+```
