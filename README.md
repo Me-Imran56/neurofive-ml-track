@@ -268,14 +268,8 @@ Files: `app.py`, `requirements.txt`, `titanic_pipeline.joblib` (the Task 7 saved
 - Tested locally (`streamlit run app.py`) and verified predictions make sense: a 1st-class
   woman → 93% predicted survival; a 3rd-class man → 6% predicted survival.
 
-**Live app:** _[add your Streamlit Community Cloud link here after deploying]_
+**Live app:** _https://neurofive-ml-track-u3fewb7saemdxguwsupx4r.streamlit.app/_
 
-### To deploy on Streamlit Community Cloud
-1. Push `app.py`, `requirements.txt`, and `titanic_pipeline.joblib` to this repo (root, or a
-   subfolder — just note the path when deploying).
-2. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub.
-3. Click **New app** → select this repo → set the main file to `app.py` → **Deploy**.
-4. Copy the live `.streamlit.app` URL it gives you and paste it above in this README.
 
 ### To run locally
 ```
